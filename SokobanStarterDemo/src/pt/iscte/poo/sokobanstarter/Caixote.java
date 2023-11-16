@@ -6,7 +6,7 @@ import pt.iscte.poo.utils.Point2D;
 public class Caixote implements ImageTile {
 
 	private Point2D Point2D;
-	private int number = 4;
+	private int number = 2;
 	
 	public Caixote(Point2D Point2D){
 		this.Point2D = Point2D;
