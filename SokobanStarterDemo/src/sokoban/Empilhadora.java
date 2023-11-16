@@ -1,6 +1,7 @@
 package sokoban;
 
 
+import pt.iscte.poo.sokobanstarter.GameEngine;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
@@ -38,6 +39,21 @@ public class Empilhadora extends GameElement{
 		}
 	}
 
+	public Point2D newPosition(int key) {
+		Direction direction = Direction.directionFor(key);
+		return getPosition().plus(direction.asVector()); 
+	}
+	
+	public void move(int key) {
+		
+		// Move segundo a direcao gerada, mas so' se estiver dentro dos limites
+		Point2D newPosition = newPosition(key);
+		super.setImageName(refreshImage(Direction.directionFor(key).ordinal()));
+		if (newPosition.getX()>=0 && newPosition.getX()<GameEngine.GRID_WIDTH && 
+			newPosition.getY()>=0 && newPosition.getY()<GameEngine.GRID_HEIGHT ){
+			setPosition(newPosition);
+		}
+	}
 	
 	
 	public Point2D move(int key) {    

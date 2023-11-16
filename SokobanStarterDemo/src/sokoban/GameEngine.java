@@ -11,6 +11,9 @@ import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.observer.Observed;
 import pt.iscte.poo.observer.Observer;
+import pt.iscte.poo.sokobanstarter.Empilhadora;
+import pt.iscte.poo.sokobanstarter.GameElement;
+import pt.iscte.poo.sokobanstarter.Obstaculo;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Direction;
 
@@ -41,11 +44,15 @@ public class GameEngine implements Observer { //criar interface para objetos que
 	@Override
 	public void update(Observed source) {
 
-		int key = gui.keyPressed();    // obtem o codigo da tecla pressionada
-		Empilhadora.getInstance().move(key);
+		int key = gui.keyPressed();    // obtem o codigo da tecla pressionada 
 		
-		System.out.println((getImageTileAtPosition(new Point2D(1,2))));
+		if (!Direction.isDirection(key)) return;
+		for (Obstaculo o: obstaculos)
+			if (Empilhadora.getInstance().newPosition(key).equals(o.getPosition()))
+				return;
+		Empilhadora.getInstance().move(key);			
 		
+
 		gui.update();                  // redesenha a lista de ImageTiles na GUI, 
 		                               // tendo em conta as novas posicoes dos objetos
 	}
@@ -65,7 +72,7 @@ public class GameEngine implements Observer { //criar interface para objetos que
 		
 		sendImagesToGUI();      // enviar as imagens para a GUI
 		//gui.update(); acho que nao é preciso colocar aqui 
-				
+		runGmElemAddToList();
 				
 		// Escrever uma mensagem na StatusBar
 		gui.setStatusMessage("Sokoban");
@@ -115,6 +122,17 @@ public class GameEngine implements Observer { //criar interface para objetos que
         
         return null; 
     }
+	
+	private void runGmElemAddToList() {
+		for (GameElement g: gameElements)
+			addToList(g);
+	}
+	
+	private void addToList(GameElement g) {
+		switch(g.getName()) {
+		case "Parede": obstaculos.add((Obstaculo) g);
+		}
+	}
 	
 	public void addMovable() {
 		for(GameElement g : gameElements) {
